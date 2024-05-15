@@ -371,7 +371,12 @@ if __name__ == '__main__':
     print(f"   loading {len(files_ref)} icar files: {files_ref[0].split('/')[-1]} to {files_ref[-1].split('/')[-1]} ")
     # print(files_ref)
 
-    dsR       = xr.open_mfdataset( files_ref)
+    try:
+        dsR       = xr.open_mfdataset( files_ref)
+    except:
+        dsR       = xr.open_mfdataset( files_ref, combine='nested', compat='override')
+        print(f"\n   !!! Warning: issues combining ref data were circumvented by using compat='override' !!! \n")
+
     pcp_var_R = get_pcp_var( dsR )
     if verbose: print(f"      Ref data precip var is {pcp_var_R}")
 

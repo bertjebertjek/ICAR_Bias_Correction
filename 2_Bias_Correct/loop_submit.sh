@@ -25,12 +25,12 @@ if [ "$CMIP" == "CMIP5" ] ; then
 elif [ "$CMIP" == "CMIP6" ] ; then
     # allMods=( CanESM5 CMCC-CM2-SR5  )
     # allMods=( CMCC-CM2-SR5 )
-    # allMods=( MIROC-ES2L )
+    allMods=( MIROC-ES2L )
     # allMods=( MPI-M.MPI-ESM1-2-LR  )
-    allMods=( NorESM2-MM  )
+    # allMods=( NorESM2-MM  )
     # allMods=( MIROC-ES2L  CMCC-CM2-SR5  )
-    allScens=( ssp370 ssp245 ssp585 hist ) #
-    # allScens=( hist )
+    # allScens=( ssp370 ssp245 ssp585 hist ) #
+    allScens=( ssp245 )
 fi
 
 #########################################################################################

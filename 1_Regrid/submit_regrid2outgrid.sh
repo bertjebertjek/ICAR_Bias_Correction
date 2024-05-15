@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l select=1:ncpus=1:mem=20GB
-#PBS -l walltime=04:00:00
+#PBS -l walltime=02:00:00
 #PBS -A P48500028
 #PBS -q casper
 #PBS -N rgr2Liv
@@ -48,25 +48,19 @@ CMIP=CMIP6
 if [ "$CMIP" == "CMIP5" ] ; then
     # allMods=( CCSM4 CMCC-CM CNRM-CM5 CanESM2 GFDL-CM3 MIROC5 MRI-CGCM3 )# HadGEM2-ES
     allMods=( CNRM-CM5 GFDL-CM3  MRI-CGCM3 )
-    # allScens=( rcp85_2005_2050 rcp85_2050_2100 )
     allScens=( historical rcp45_2005_2050 rcp45_2050_2100 rcp85_2005_2050 rcp85_2050_2100  )
-    # allScens=( rcp45_2050_2100 rcp85_2050_2100  )
+
     path_in=/glade/campaign/ral/hap/bert/${CMIP}/WUS_icar_nocp_full # CMIP5 !~!!!!
     path_out=/glade/derecho/scratch/bkruyt/${CMIP}/WUS_icar_LivGrd2
 
 elif [ "$CMIP" == "CMIP6" ] ; then
-    # allMods=( CanESM5 )  # CMCC-CM2-SR5 MPI-M.MPI-ESM1-2-LR  NorESM2-MM
-    allMods=( CMCC-CM2-SR5 MIROC-ES2L MPI-M.MPI-ESM1-2-LR NorESM2-MM)
-    # allMods=( MIROC-ES2L )
-    # allMods=(  MPI-M.MPI-ESM1-2-LR )
-    # allMods=( NorESM2-MM )
 
-    allScens=(  hist ssp245_2004 ssp245_2049 ssp370_2004 ssp370_2049 ssp585_2004 ssp585_2049 )
-    # allScens=( ssp585_2049 ) # ssp370_2004 ssp585_2004)ssp245_2004 ssp585_2004 ssp585_2049
-    # allScens=( hist ssp370_2004 ssp370_2049 ssp585_2004 ssp585_2049 )
+    # allMods=( CanESM5 CMCC-CM2-SR5 MIROC-ES2L MPI-M.MPI-ESM1-2-LR NorESM2-MM)
+    # allScens=(  hist ssp245_2004 ssp245_2049 ssp370_2004 ssp370_2049 ssp585_2004 ssp585_2049 )
+    allMods=( MIROC-ES2L )
+    allScens=( ssp245_2004 ssp245_2049 )
 
     path_in=/glade/campaign/ral/hap/bert/${CMIP}/WUS_icar_nocp_full2 # CMIP6
-    # path_out=/glade/derecho/scratch/bkruyt/${CMIP}/WUS_icar_LivGrd3 # lake mask ta2m
     path_out=/glade/derecho/scratch/bkruyt/${CMIP}/PNW_icar_gmet # lake mask ta2m
 
 fi
@@ -110,7 +104,7 @@ for scen in ${allScens[@]}; do
     echo "Regrid $dt ICAR  for  $model $scen ${year} (${CMIP})"
 
     # # wait for this scenario to finish, before going to the next one. (Or request more memory)
-    python regrid2gmet.py $year $model $scen $dt $path_in $path_out $CMIP >& job_output/${model}_${scen}_${dt}/${year} & pid1=$!
+    python regrid2outgrid.py $year $model $scen $dt $path_in $path_out $CMIP >& job_output/${model}_${scen}_${dt}/${year} & pid1=$!
     # wait for process to finish before continueing loop:
     wait $pid1
 

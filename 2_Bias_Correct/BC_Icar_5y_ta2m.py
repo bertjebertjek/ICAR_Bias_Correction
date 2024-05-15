@@ -408,7 +408,12 @@ if __name__ == '__main__':
 
     files_ref = get_icar_ref_filelist(ref_start.split('-')[0], ref_end.split('-')[0], dt=dt)
     print(f"   loading {len(files_ref)} icar files: {files_ref[0].split('/')[-1]} to {files_ref[-1].split('/')[-1]} ")
-    dsRef_full = xr.open_mfdataset( files_ref)
+    # dsRef_full = xr.open_mfdataset( files_ref)
+    try:
+        dsRef_full  = xr.open_mfdataset( files_ref)
+    except:
+        dsRef_full  = xr.open_mfdataset( files_ref, combine='nested', compat='override')
+        print(f"\n   !!! Warning: issues combining ref data were circumvented by using compat='override' !!! \n")
 
     print(f"   Ref full time: {dsRef_full.time.values.min()} to {dsRef_full.time.max().values} ")
 

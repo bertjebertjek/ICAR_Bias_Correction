@@ -18,8 +18,8 @@ CMIP=CMIP6
 
 # # # # # #    Setings     # # # # # #
 dt=3hr
-# dt=daily
-part=2  # part 1 = from start; part 2 = look for last output file and restart there : 3=custom (in case we need to rerun sth.)
+dt=daily
+part=1  # part 1 = from start; part 2 = look for last output file and restart there : 3=custom (in case we need to rerun sth.)
 
 
 if [ "$CMIP" == "CMIP5" ] ; then
@@ -29,14 +29,16 @@ if [ "$CMIP" == "CMIP5" ] ; then
     allScens=( rcp45 )
 elif [ "$CMIP" == "CMIP6" ] ; then
     # allMods=( CanESM5 CMCC-CM2-SR5 MIROC-ES2L NorESM2-MM ) #
-    allMods=( MPI-M.MPI-ESM1-2-LR ) # ) #
+    allMods=( MIROC-ES2L )
+    # allMods=( MPI-M.MPI-ESM1-2-LR ) # ) #
     # allScens=(  ssp245  ssp370 ssp585  )
-    allScens=( hist )
+    allScens=( ssp245 )
 fi
 echo "########################################################## "
 echo " Submitting ta2m bias correction to Livneh grid for: "
 echo "   ${allMods[*]}"
 echo "   ${allScens[*]}"
+echo "   dt = $dt "
 echo "   part = ${part}"
 echo "  "
 echo "########################################################## "
@@ -55,8 +57,8 @@ for model in ${allMods[@]} ; do
     cat <<EOS | qsub -
     #!/bin/bash
 
-    #PBS -l select=1:ncpus=1:mem=350GB
-    #PBS -l walltime=12:00:00
+    #PBS -l select=1:ncpus=1:mem=20GB
+    #PBS -l walltime=01:00:00
     #PBS -A P48500028
     #PBS -q casper
     #PBS -N T_$model
@@ -70,7 +72,7 @@ for model in ${allMods[@]} ; do
 
     # # #    Run the script    # # #
     mkdir -p job_auto_${CMIP}_ta2m_${dt}
-    python -u BC_Icar2Liv_5y_ta2m.py $model $scen $part $dt $CMIP >& job_auto_${CMIP}_ta2m_${dt}/${model}_${scen}_${dt}
+    python -u BC_Icar_5y_ta2m.py $model $scen $part $dt $CMIP >& job_auto_${CMIP}_ta2m_${dt}/${model}_${scen}_${dt}
 
 
 EOS
