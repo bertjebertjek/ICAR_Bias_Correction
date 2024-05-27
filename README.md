@@ -14,10 +14,10 @@ A livneh-specific version can be found at https://github.com/bertjebertjek/BC2Li
 
 
 ## 1. Regrid the post-processed ICAR data to the output grid:
-    in subdir `1_Regrid`
-    This is required before we can bias correct to the output grid.
-    Set in- and output paths, models, scenarios, and timestep (daily or 3hr) in  `submit_regrid2outgrid.sh`
-    Set path to observational files (bc_grid_files) in `regrid2outgrid.py` ln38 and a name for the grid in ln39 (this will be used in the file naming.)
+in subdir `1_Regrid`
+This is required before we can bias correct to the output grid.
+Set in- and output paths, models, scenarios, and timestep (daily or 3hr) in  `submit_regrid2outgrid.sh`
+Set path to observational files (bc_grid_files) in `regrid2outgrid.py` ln38 and a name for the grid in ln39 (this will be used in the file naming.)
 
 
 
@@ -44,7 +44,10 @@ Make sure to test and set appropriate memory use and time allocation in `2_Bias_
 
 
 ### Post processing
-If there are still variables in the output we don;t need, use `remove_vars_and_float.py` to remove them and make all other variables float32 iso float64. If the preprocessing was done with the procedures in dir `../CMIP_ICAR_postprocess` this should not be necessary.
+- If there are still variables in the output we don;t need, use `remove_vars_and_float.py` to remove them and make all other variables float32 iso float64. If the preprocessing was done with the procedures in dir `../CMIP_ICAR_postprocess` this should not be necessary.
+
+- the Bias correction produces subfolders 3hr_pcp (daily_pcp) and 3hr (daily). The *_pcp folders only have the precipitation corrected, and serve as input for the temperature bias correction. These should be deleted after checking that all bias correction has terminated succesfully, to avoid confusion and save space.
+
 
 
 

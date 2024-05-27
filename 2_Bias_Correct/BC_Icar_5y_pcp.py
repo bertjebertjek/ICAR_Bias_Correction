@@ -66,7 +66,7 @@ def process_command_line():
 
 
 
-def get_icar_filelist(start_year, end_year, dt="3hr"): #,base_in=""):
+def get_icar_filelist(start_year, end_year, dt="3hr"):
     """returns a list of files (with full path) that fall within the period between start_year, end_year (strings %Y or int)"""
 
     ## When processing scenario scen, we want the full overlap of the reference period with obs, even thought that is partly in a scenario (technically from 2015 for CMIP6?  2005 CMIP5)

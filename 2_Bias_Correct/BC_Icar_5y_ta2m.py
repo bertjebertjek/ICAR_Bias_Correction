@@ -309,12 +309,10 @@ if __name__ == '__main__':
     print(' ########################################################', '\n')
 
     # base_in  = f"/glade/campaign/ral/hap/bert/{CMIP}/WUS_icar_livBC2" # PCP in! # This needs to be the same as path_out in BC_Icar2Liv_5y_pcp.py !!!
-    base_in = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC"
+    base_in = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC" # This should be the path where the pcp corrected files are after correcting pcp!
     ref_in  = f"/glade/derecho/scratch/bkruyt/{CMIP}/PNW_icar_gmet"
     path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC"
-    # base_in  = f"/glade/campaign/ral/hap/bert/{CMIP}/WUS_icar_livBC3" # PCP in! # ta2m mased correctlt
-    # ref_in   = f"/glade/derecho/scratch/bkruyt/{CMIP}/WUS_icar_LivGrd3"  # referenece files
-    # path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/WUS_icar_livBC3"
+
 
     # the output grid - the files that we will bias correct to.
     bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_daily/ens_forc.LIBBY.0625*.nc")
@@ -388,8 +386,6 @@ if __name__ == '__main__':
     elif int(args.part)==3:  # custom
         time_s=['2050-01-01']
         time_f=['2054-12-31']
-        # time_s=['2040-01-01']  # GFDL rcp45, CCSM 85
-        # time_f=['2044-12-31']
         ts=0
 
 
@@ -433,12 +429,6 @@ if __name__ == '__main__':
         sys.exit()
     # dsTmax_ref = dsRef_full['Tmax'].load()  # so make daily before loading.
 
-
-    # print("      Memory use after loading daily ICAR ref:")
-    # # Getting % usage of virtual_memory ( 3rd field)
-    # print('      * * *   RAM memory % used:', psutil.virtual_memory()[2], '   * * *   ')
-    # # Getting usage of virtual_memory in GB ( 4th field)
-    # print('      * * *   RAM Used (GB):', psutil.virtual_memory()[3]/1000000000, '   * * *   ')
 
     # - - - - - C. Define data to match:  (Livneh) - - - - -
     icar_1_for_grid = xr.open_mfdataset( files_ref[0])  # one ICAR file to crop livneh with
