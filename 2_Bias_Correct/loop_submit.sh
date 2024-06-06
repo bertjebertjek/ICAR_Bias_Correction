@@ -4,7 +4,7 @@
 #########################               Settings            #############################
 #########################################################################################
 
-CMIP=CMIP6
+CMIP=CMIP5
 part=1    # part 1 = from start; part 2 = look for last output file and restart there : 3=custom (in case we need to rerun sth.)
 dt=daily
 #________________________________________________________________________
@@ -14,23 +14,20 @@ dt=daily
 
 #-----------------    CMIP5    ------------------------
 if [ "$CMIP" == "CMIP5" ] ; then
-    # allMods=( CanESM2 CCSM4 CMCC-CM CNRM-CM5  GFDL-CM3 MIROC5 MRI-CGCM3 )# HadGEM2-ES
+    allMods=( CanESM2 CCSM4 CMCC-CM CNRM-CM5  GFDL-CM3 MIROC5 MRI-CGCM3 ) # HadGEM2-ES
     # allMods=( MIROC5) # CCSM4 CMCC-CM CNRM-CM5 CanESM2 GFDL-CM3 MIROC5
-    # allScens=( rcp45 )
-    allMods=( CanESM2 CCSM4 CMCC-CM CNRM-CM5 )
-    # allScens=( historical ) # rcp85 )
-    allScens=( historical rcp45 rcp85 )
-    # allScens=( historical rcp45 ) # rcp85 )  #
+    # allScens=(  rcp45  )
+    allScens=( historical rcp45 rcp85 )  #
 #-----------------    CMIP6    ------------------------
 elif [ "$CMIP" == "CMIP6" ] ; then
-    # allMods=( CanESM5 CMCC-CM2-SR5  )
-    # allMods=( CMCC-CM2-SR5 )
-    allMods=( MIROC-ES2L )
+    # allMods=( CanESM5 CMCC-CM2-SR5 MIROC-ES2L MPI-M.MPI-ESM1-2-LR NorESM2-MM )
+    allMods=( MIROC-ES2L MPI-M.MPI-ESM1-2-LR NorESM2-MM )
+    # allMods=( MIROC-ES2L )
     # allMods=( MPI-M.MPI-ESM1-2-LR  )
     # allMods=( NorESM2-MM  )
     # allMods=( MIROC-ES2L  CMCC-CM2-SR5  )
-    # allScens=( ssp370 ssp245 ssp585 hist ) #
-    allScens=( ssp245 )
+    allScens=( ssp370 ssp245 ssp585 hist ) #
+    # allScens=( ssp245 )
 fi
 
 #########################################################################################

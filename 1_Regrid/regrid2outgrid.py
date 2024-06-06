@@ -442,7 +442,7 @@ if __name__ == '__main__':
         if not os.path.exists(f"{ICAR_on_outgrid_path}/{model}_{scenario}/{dt}"):
             os.makedirs(f"{ICAR_on_outgrid_path}/{model}_{scenario}/{dt}")
 
-        outfile= f"{ICAR_on_outgrid_path}/{model}_{scenario}/{dt}/icar_{dt}_livgrd_{model}_{scen}_{year}.nc"
+        outfile= f"{ICAR_on_outgrid_path}/{model}_{scenario}/{dt}/icar_{dt}_{grid_name}_{model}_{scen}_{year}.nc"
         icar_on_liv.to_netcdf( outfile )
         print(f"written to {outfile} \n")
 

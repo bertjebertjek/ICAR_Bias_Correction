@@ -46,6 +46,7 @@ test = False # reduces datasets for faster processing, incorrect results!
 calc_relhum = True  # add a relative humidity variable to the dataset, by calculating this from (corrected) ta2m and qv
 dropvars=True   # drop variables in vars_to_drop (below). Also writes to "3hr" subdir iso "3hr_ta2m" !
 grid_name="gmet"
+detrend_T = True
 # the variables to remove:
 vars_to_drop=["swe", "soil_water_content", "hfls", "hus2m",
             "runoff_surface","runoff_subsurface",
@@ -290,6 +291,22 @@ def drop_vars(ds, vars_to_drop=vars_to_drop):
     return ds_out
 
 
+def  swap_TminTmax( ds ):
+    """ Swap Tmin & Tmax if Tmin> Tmax"""
+
+    # check
+    idx = np.where( ds.Tmin.values > ds.Tmax.values )
+
+    ds['Tmin'].values = xr.where( ds.Tmin>ds.Tmax, ds.Tmax, ds.Tmin )
+    ds['Tmax'].values = xr.where( ds.Tmin>ds.Tmax, ds.Tmin, ds.Tmax )
+
+    idx2 = np.where( ds.Tmin.values > ds.Tmax.values )
+    print( f"Swapping...: {len(np.unique(idx[0]))} Tmin>Tmax before, {len(np.unique(idx2[0]))} after") # nr of timesteps w TMin>Tmax
+
+    return ds
+
+
+
 ############################################
 #                Main                      #
 # ###########################################
@@ -309,13 +326,14 @@ if __name__ == '__main__':
     print(' ########################################################', '\n')
 
     # base_in  = f"/glade/campaign/ral/hap/bert/{CMIP}/WUS_icar_livBC2" # PCP in! # This needs to be the same as path_out in BC_Icar2Liv_5y_pcp.py !!!
-    base_in = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC" # This should be the path where the pcp corrected files are after correcting pcp!
+    base_in = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC2" # This should be the path where the pcp corrected files are after correcting pcp!
     ref_in  = f"/glade/derecho/scratch/bkruyt/{CMIP}/PNW_icar_gmet"
-    path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC"
+    path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC2"
 
 
     # the output grid - the files that we will bias correct to.
-    bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_daily/ens_forc.LIBBY.0625*.nc")
+    # bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_daily/ens_forc.LIBBY.0625*.nc")
+    bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_libby_daily_Tfix/ens_forc.LIBBY.0625*.nc")
     ref_start = '1971-01-01'
     # ref_start = '1950-01-01'  # the range of the reference dataset that overlaps with the obs. NOTE: Different for CMIP5!
     ref_end   = '2014-12-31'
@@ -441,11 +459,6 @@ if __name__ == '__main__':
     Tmin2match = Tmin2match.load()
     Tmax2match = Tmax2match.load()
 
-    # print("      Memory after loading livneh (bf starting 5y loop):")
-    # # Getting % usage of virtual_memory ( 3rd field)
-    # print('      * * *   RAM memory % used:', psutil.virtual_memory()[2], '   * * *   ')
-    # # Getting usage of virtual_memory in GB ( 4th field)
-    # print('      * * *   RAM Used (GB):', psutil.virtual_memory()[3]/1000000000, '   * * *   ')
 
     #################   Loop through the 5y periods:    ###############
     for t in range(ts,len(time_s)):
@@ -471,13 +484,20 @@ if __name__ == '__main__':
                                              ,dsRef_tmin  = dsTmin_ref_ex5y
                                              ,dsRef_tmax  = dsTmax_ref_ex5y
                                              ,bc_by_month = bc_by_month
+                                             ,detrend_T   = detrend_T
                                              )
 
-        print("      Memory use after bc:")
-        # Getting % usage of virtual_memory ( 3rd field)
-        print('   * * *   RAM memory % used:', psutil.virtual_memory()[2], '   * * *   ')
-        # Getting usage of virtual_memory in GB ( 4th field)
-        print('   * * *   RAM Used (GB):', psutil.virtual_memory()[3]/1000000000, '   * * *   ')
+        if dt=="daily":
+            print(f"\n   checking for Tmin>Tmax:")
+            T_corrected_ds = swap_TminTmax(T_corrected_ds)
+            print(f"\n")
+
+        # if verbose:
+        #     print("      Memory use after bc:")
+        #     # Getting % usage of virtual_memory ( 3rd field)
+        #     print('   * * *   RAM memory % used:', psutil.virtual_memory()[2], '   * * *   ')
+        #     # Getting usage of virtual_memory in GB ( 4th field)
+        #     print('   * * *   RAM Used (GB):', psutil.virtual_memory()[3]/1000000000, '   * * *   ')
 
 
         #_______ calculate relative humidity at 2m: ________

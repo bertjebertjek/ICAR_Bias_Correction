@@ -287,10 +287,11 @@ if __name__ == '__main__':
     # base_in  = f"/glade/derecho/scratch/bkruyt/{CMIP}/WUS_icar_LivGrd2"   # derecho
     base_in  = f"/glade/derecho/scratch/bkruyt/{CMIP}/PNW_icar_gmet"   #
     # path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/WUS_icar_livBC"
-    path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC"
+    path_out = f"/glade/campaign/ral/hap/bert/{CMIP}/PNW_icar_gmetBC2"
 
     # the output grid - the files that we will bias correct to.
-    bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_daily/ens_forc.LIBBY.0625*.nc")
+    # bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_daily/ens_forc.LIBBY.0625*.nc")
+    bc_grid_files = glob.glob("/glade/derecho/scratch/bkruyt/gmet_libby_daily_Tfix/ens_forc.LIBBY.0625*.nc")
     ref_start = '1971-01-01'
     # ref_start = '1950-01-01'  # the range of the reference dataset that overlaps with the obs. NOTE: Different for CMIP5!
     ref_end   = '2014-12-31'   # '2004-12-31' for CMIP5!

@@ -222,7 +222,7 @@ def correct_precip(this_ds, dsObs, dsRef,  bc_by_month=False, noise=True, verbos
 ######################################################
 
 
-def correct_temperature( this_ds, dsObs_tmin, dsObs_tmax, dsRef_tmin, dsRef_tmax,  bc_by_month=False):
+def correct_temperature( this_ds, dsObs_tmin, dsObs_tmax, dsRef_tmin, dsRef_tmax,  bc_by_month=False, detrend_T=False):
 
     if bc_by_month:
         print("   - - - - - - - -  Bias-correcting temperature by month - - - - - - - - -  ")
@@ -283,25 +283,25 @@ def correct_temperature( this_ds, dsObs_tmin, dsObs_tmax, dsRef_tmin, dsRef_tmax
         print("   quantile mapping t_min")
         bc_tmin = quantile_mapping.quantile_mapping_by_group(
             # tmin, icar_tmin, ltmin_on_icar,  extrapolate="1to1", grouper='time.month' , n_endpoints=50
-             tmin, dsRef_tmin, dsObs_tmin,  extrapolate="1to1", grouper='time.month' , n_endpoints=50
+             tmin, dsRef_tmin, dsObs_tmin,  extrapolate="1to1", grouper='time.month', detrend=detrend_T, n_endpoints=50
             )
         del dsRef_tmin, dsObs_tmin
 
         print("   quantile mapping t_max")
         bc_tmax = quantile_mapping.quantile_mapping_by_group(
-            tmax, dsRef_tmax, dsObs_tmax,  extrapolate="1to1", grouper='time.month' , n_endpoints=50
+            tmax, dsRef_tmax, dsObs_tmax,  extrapolate="1to1", grouper='time.month',detrend=detrend_T, n_endpoints=50
             )
         del dsRef_tmax, dsObs_tmax
     else:
         print("   quantile mapping t_min")
         bc_tmin = quantile_mapping.quantile_mapping(
-            tmin, dsRef_tmin, dsObs_tmin,  extrapolate="1to1" , n_endpoints=50
+            tmin, dsRef_tmin, dsObs_tmin,  extrapolate="1to1" ,detrend=detrend_T, n_endpoints=50
             )
         del dsRef_tmin, dsObs_tmin
 
         print("   quantile mapping t_max")
         bc_tmax = quantile_mapping.quantile_mapping(
-             tmax, dsRef_tmax, dsObs_tmax,  extrapolate="1to1" , n_endpoints=50
+             tmax, dsRef_tmax, dsObs_tmax,  extrapolate="1to1" ,detrend=detrend_T, n_endpoints=50
             )
         del dsRef_tmax, dsObs_tmax
 
